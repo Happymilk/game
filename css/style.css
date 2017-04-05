@@ -1,0 +1,52 @@
+* {
+    margin:0;
+    padding:0;
+}
+
+body {
+    overflow: hidden;
+    background: url(images/city.png) repeat-x 0 100% fixed,
+                url(images/cloud.png) no-repeat fixed,
+                url(images/cloud.png) no-repeat fixed,
+                linear-gradient(to top, #5080b1, #004e8c) fixed;
+    animation: city 30s linear infinite;
+    -webkit-animation: city 30s linear infinite;
+   }
+   @keyframes city {
+    from { background-position: -1000px 100%, 120% 30%, 120% 15%, 0 0;}
+    to { background-position: 0 100%, -200% 10%, -50% 15%, 0 0; }
+   }
+   @-webkit-keyframes city {
+    from { background-position: -1000px 100%, 120% 30%, 120% 15%, 0 0;}
+    to { background-position: 0 100%, -200% 10%, -50% 15%, 0 0; }
+   }
+
+h1 {
+    color: #ccc;
+    font: 100pt Arial;
+    top: 40%;
+    left: 50%;
+    position:absolute;
+    text-align:center;
+}
+
+h2 {
+    color: #ccc;
+    font: 50pt Arial;
+    top: 60%;
+    left: 20%;
+    position:absolute;
+    text-align:center;
+}
+
+#canvas {
+    background:rgba(255, 255, 255, 0.1);
+    border:0px solid #ccc;
+    left:5%;
+    position:absolute;
+    text-align:center;
+    top:0%;
+    cursor: none;
+    width: 90%;
+    z-index: 1000;
+} 
