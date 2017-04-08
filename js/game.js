@@ -1,6 +1,8 @@
 let game_screen_width  = 1280;  
 let game_screen_height = 720; 
 
+let acceleration = null;
+
 const menu_stage  = 0;
 const game_stage  = 1;		
 const score_stage = 2;
@@ -95,7 +97,7 @@ function mainLoop() {
 		window.setTimeout(timer, (15 - diff));			
 	}	
 
-	window.setTimeout(timer, 15);		
+	window.setTimeout(timer, 15);	
 }
 
 function textFont(font) {
@@ -120,13 +122,13 @@ let KEY = 0;
 let KEY_SPACE = false;
 
 function gameMouseMove(event) {
-	mouseX = event.clientX - canvas.offsetLeft;    
-	mouseY = event.clientY - canvas.offsetTop;
+    mouseX = (event.clientX - canvas.offsetLeft) / acceleration;      
+    mouseY = (event.clientY - canvas.offsetTop) / acceleration; 
 }
 
 function gameMouseClick(event) {
-	mouseClickX = event.clientX - canvas.offsetLeft;    
-	mouseClickY = event.clientY - canvas.offsetTop;    		
+	mouseClickX = (event.clientX - canvas.offsetLeft) / acceleration;    
+	mouseClickY = (event.clientY - canvas.offsetTop) / acceleration;    		
 }
 	
 function gameMouseDown(event) {			
@@ -241,6 +243,8 @@ function drawBall() {
 }
 
 function updateBall() {
+    size();
+
     if(ball.x + ball.dx + ball.radius > canvas.width || ball.x + ball.dx - ball.radius < 0) { 
         ball.dx = -ball.dx;
         bounce('sound/Jump.wav');
@@ -303,6 +307,7 @@ function updateBall() {
 function sticky() {
     ball.x = paddle.x + (paddle.width / 2); 
     ball.y = paddle.y - paddle.height; 
+    size();
 }		
 
 function initPaddle() {
@@ -450,5 +455,21 @@ function draw() {
 function bounce(audio) {
     let sound = new Audio(audio);
     sound.play();
+}
+
+function size() {
+    tmp = document.getElementById("canvas");
+    if(document.documentElement.clientHeight < game_screen_height || document.documentElement.clientWidth > game_screen_width) {       
+        tmp.style.height = document.documentElement.clientHeight + 'px';
+        tmp.style.width = "";
+        acceleration = document.documentElement.clientHeight / game_screen_height;
+        if (document.documentElement.clientWidth > tmp.clientWidth) 
+            tmp.style.left = (document.documentElement.clientWidth - tmp.clientWidth) / 2 + 'px';
+    } else {
+        tmp.style.width = document.documentElement.clientWidth + 'px';
+        tmp.style.height = "";
+        tmp.style.left = "";
+        acceleration = document.documentElement.clientWidth / game_screen_width;
+    }
 }
 	
