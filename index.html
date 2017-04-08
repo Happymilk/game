@@ -8,8 +8,12 @@
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body onload="gameRun()" onkeydown="gameKeyboardUpdateStates(event)" onkeyup="gameKeyboardClearStates(event)"> 
-	<h1 class="animated bounceInDown">ARKANOID</h1>
-	<h2 class="animated bounceInUp">PRESS SPACE TO START</h2>
+	<h1 id="title" class="animated bounceInDown">ARKANOID</h1>
+	<h2 id="start" class="animated bounceInUp">PRESS SPACE TO START</h2>
 	<canvas id="canvas" width="1280" height="720" onmousedown="gameMouseDown(event)" onmouseup="gameMouseUp(event)" onmousemove="gameMouseMove(event)" onclick="gameMouseClick(event)"></canvas>
+	<div id="footer" class="animated bounce">
+		<p>Game by </p>
+		<a href="https://github.com/Happymilk" class="button grow-rotate">Wramble</a>
+	</div>
 </body>
 </html>

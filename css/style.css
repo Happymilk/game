@@ -1,52 +1,85 @@
 * {
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+}
+
+a:hover {
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    transition: color 0.3s;
+}
+
+.grow-rotate {
+    display: inline-block;
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    -webkit-transition-property: -webkit-transform;
+    transition-property: transform;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+}
+
+.grow-rotate:hover {
+    -webkit-transform: scale(1.1) rotate(4deg);
+    -ms-transform: scale(1.1) rotate(4deg);
+    transform: scale(1.1) rotate(4deg);
 }
 
 body {
     overflow: hidden;
-    background: url(images/city.png) repeat-x 0 100% fixed,
-                url(images/cloud.png) no-repeat fixed,
-                url(images/cloud.png) no-repeat fixed,
-                linear-gradient(to top, #5080b1, #004e8c) fixed;
-    animation: city 30s linear infinite;
-    -webkit-animation: city 30s linear infinite;
-   }
-   @keyframes city {
-    from { background-position: -1000px 100%, 120% 30%, 120% 15%, 0 0;}
-    to { background-position: 0 100%, -200% 10%, -50% 15%, 0 0; }
-   }
-   @-webkit-keyframes city {
-    from { background-position: -1000px 100%, 120% 30%, 120% 15%, 0 0;}
-    to { background-position: 0 100%, -200% 10%, -50% 15%, 0 0; }
-   }
+    background-color: #aad160;
+}
 
 h1 {
-    color: #ccc;
-    font: 100pt Arial;
+    color: #000;
+    font: 10vw Arial;
     top: 40%;
-    left: 50%;
-    position:absolute;
-    text-align:center;
+    right: 5%;
+    position: absolute;
+    text-align: center;
+    max-width: 100%;
 }
 
 h2 {
-    color: #ccc;
-    font: 50pt Arial;
+    color: #000;
+    font: 5vw Arial;
     top: 60%;
-    left: 20%;
-    position:absolute;
-    text-align:center;
+    left: 15%;
+    position: absolute;
+    text-align: center;
 }
 
 #canvas {
-    background:rgba(255, 255, 255, 0.1);
-    border:0px solid #ccc;
-    left:5%;
-    position:absolute;
-    text-align:center;
-    top:0%;
+    background:rgba(255, 255, 255, 0);
+    border: 0px solid #ccc;
+    left: 50%;
+    position: absolute;
+    text-align: center;
+    margin-left: -640px;
+    top: 0%;
     cursor: none;
-    width: 90%;
     z-index: 1000;
 } 
+
+#footer {
+    color: #000;
+    font: 10pt Arial;
+    position: absolute; 
+    left: 48%; 
+    bottom: 0;
+    z-index: 1001;
+    display: inline-flex;
+}
+
+#footer a {
+    margin-left: 4px;
+}
