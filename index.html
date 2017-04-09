@@ -1,19 +1,67 @@
 <!DOCTYPE html>
 <html>
-<head>   
+<head>
 	<meta charset="utf-8"> 
 	<title>Arkanoid</title>
 	<link rel="stylesheet" href="css/animate.css">
-    <script type="text/javascript" src="js/game.js"></script>
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/index.css">
 </head>
-<body onload="gameRun()" onkeydown="gameKeyboardUpdateStates(event)" onkeyup="gameKeyboardClearStates(event)"> 
-	<h1 id="title" class="animated bounceInDown">ARKANOID</h1>
-	<h2 id="start" class="animated bounceInUp">PRESS SPACE TO START</h2>
-	<canvas id="canvas" width="1280" height="720" onmousedown="gameMouseDown(event)" onmouseup="gameMouseUp(event)" onmousemove="gameMouseMove(event)" onclick="gameMouseClick(event)"></canvas>
-	<div id="footer" class="animated bounce">
-		<p>Game by </p>
-		<a href="https://github.com/Happymilk" class="button grow-rotate">Wramble</a>
+<body>
+	<div class="bgimg-1">
+		<div class="caption">
+			<span class="border">ARKANOID</span>
+		</div>
+	</div>
+	<div id="info">
+		<h3>ARKANOID GAME</h3>
+		<p>Arkanoid (アルカノイド Arukanoido) is an arcade game developed by Taito in 1986. It expanded 
+			upon Atari's Breakout games of the 1970s by adding power-ups, different types of bricks, a 
+			variety of level layouts, and visual layering and depth. The title refers to a doomed 
+			"mothership" from which the player's ship, the Vaus, escapes. Arkanoid revived the Breakout 
+			concept, resulting in many clones and similar games for home computers, even over a decade 
+			later.</p>
+	</div>
+	<div class="bgimg-2">
+		<div class="caption">
+		</div>
+	</div>
+	<div class="section">
+		<div class="text">
+			<h3 style="color: aliceblue;">CONTROLS</h3>
+			<table>
+				<tr>
+					<td>
+						<img src="img/space.png">
+					</td>
+					<td>
+						<img src="img/mouse.png">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>Press space button to start the game or round.</p>
+					</td>
+					<td>
+						<p>Use mouse to control the paddle.</p>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="bgimg-3">
+		<div class="caption">
+		</div>
+	</div>
+	<div class="section">
+		<div class="text" style="text-align:center;">
+			<p>Game by</p>
+			<a href="https://github.com/Happymilk" class="grow-rotate">Wramble</a>
+		</div>
+	</div>
+	<div class="bgimg-1">
+		<div class="caption">
+			<a class="grow-rotate play" href="game.html">PLAY GAME</a>
+		</div>
 	</div>
 </body>
 </html>
