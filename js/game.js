@@ -3,9 +3,9 @@ let game_screen_height = 720;
 
 let acceleration = null;
 
-const menu_stage  = 0;
-const game_stage  = 1;		
-const score_stage = 2;
+let menu_stage  = 0;
+let game_stage  = 1;		
+let score_stage = 2;
 
 let game_start = false;
 
@@ -66,14 +66,8 @@ let tmp = null;
 function gameRun() {
 	canvas = document.getElementById("canvas");
 	context = canvas.getContext("2d");			
-	init(); 
 	draw(); 				
-	mainLoop();
-}
-
-function gameDefault() {
-	textFont('12pt Arial');
-	textColor('#000');
+	setLoop();
 }
 
 function gameClear() {
@@ -81,9 +75,8 @@ function gameClear() {
 	context.beginPath();
 }
 
-function mainLoop() {
-	let start = new Date().getTime(),
-	time = 0;
+function setLoop() {
+	let start = new Date().getTime(), time = 0;
 
 	function timer() {
 		time += 15;
@@ -91,13 +84,16 @@ function mainLoop() {
 		let diff = (new Date().getTime() - start) - time;	
 
 		gameClear();
-		gameDefault(); 
+		
+        textFont('12pt Arial');
+	    textColor('#000');
+
 		update(); 	   
 		draw(); 	  		 				
 		window.setTimeout(timer, (15 - diff));			
 	}	
 
-	window.setTimeout(timer, 15);	
+	window.setTimeout(timer, 15);
 }
 
 function textFont(font) {
@@ -152,30 +148,6 @@ function gameKeyboardClearStates(event) {
 	KEY_SPACE = false;		
 }
 
-function lineWidth(width) {	
-	context.lineWidth = width;		    
-}
-          
-function lineStyle(style) {		
-	context.lineCap = cap; 
-}	
-
-function gameBegin() {
-	context.beginPath();
-}
-
-function moveTo(x, y) {
-	context.moveTo(x, y);
-}
-
-function lineTo(x, y) {
-	context.lineTo(x, y);
-}	
-
-function gameEnd() {
-    context.stroke();
-}	
-
 function circle(x, y, radius, fill_style) {
     function arc(x, y, radius, startAngle, endAngle) {
         startingAngle = startAngle * Math.PI;
@@ -194,13 +166,6 @@ function circle(x, y, radius, fill_style) {
     context.stroke(); 
 } 
 
-function line(x1, y1, x2, y2, cap) {                            
-    context.beginPath();           
-    context.moveTo(x1,y1);
-    context.lineTo(x2,y2);                 
-    context.stroke();
-}
-
 function rectangle(topLeftCornerX, topLeftCornerY, width, height, fill_style) {
     context.beginPath();
     context.rect(topLeftCornerX, topLeftCornerY, width, height);
@@ -208,15 +173,6 @@ function rectangle(topLeftCornerX, topLeftCornerY, width, height, fill_style) {
     context.fill();
     context.stroke();
 }  	
-
-function init() {	
-    initMenu();			
-}
-
-function initMenu() {}
-function drawMenu() {}
-function initScore() {}
-function updateScore() {}
 
 function updateMenu() {
     if(KEY_SPACE) {
@@ -247,7 +203,7 @@ function updateBall() {
 
     if(ball.x + ball.dx + ball.radius > canvas.width || ball.x + ball.dx - ball.radius < 0) { 
         ball.dx = -ball.dx;
-        bounce('sound/Jump.wav');
+        sound('sound/Jump.wav');
     }
 
     rowheight = bricks.height + bricks.padding;
@@ -277,21 +233,21 @@ function updateBall() {
                     score += 1;		
                     break;
             }        
-            bounce('sound/Plus.wav');
+            sound('sound/Plus.wav');
         }
     
     if(ball.y + ball.dy - ball.radius < 20) {
         ball.dy = -ball.dy;
-        bounce('sound/Jump.wav');
+        sound('sound/Jump.wav');
     } else 
         if(ball.y + ball.dy + ball.radius > canvas.height - paddle.height) 
             if(ball.x + ball.radius > paddle.x && ball.x - ball.radius < paddle.x + paddle.width) {
                 ball.dy = -ball.dy;
                 ball.dx = 8 * ((ball.x - (paddle.x + paddle.width / 2)) / paddle.width);
-                bounce('sound/Jump.wav');						
+                sound('sound/Jump.wav');						
             } else              
                 if(ball.y + ball.dy + ball.radius > canvas.height) {
-                    bounce('sound/Explosion.wav');
+                    sound('sound/Explosion.wav');
                     lives--;
                     score -= 100;
                     
@@ -410,8 +366,7 @@ function updateGame() {
 }
 
 function drawInfoBar() {
-    rectangle(0, 0, game_screen_width, 20, "#000");
-    
+    rectangle(0, 0, game_screen_width, 20, "#000");   
     textColor('#fff');
     text('Score: ' + score, game_screen_width / 2 - 50, 15);		
     text('Level: ' + level, 10, 15);
@@ -439,22 +394,19 @@ function update() {
         updateMenu(); 
     else if (game_current_stage == game_stage)  
         updateGame(); 
-    else if (game_current_stage == score_stage)  
-        updateScore();
 }
 		
 function draw() {
-    if (game_current_stage == menu_stage)  
-        drawMenu(); 
-    else if (game_current_stage == game_stage)  
+    if (game_current_stage == game_stage)  
         drawGame(); 
     else if (game_current_stage == score_stage)  
         drawScore();
 }
 
-function bounce(audio) {
-    let sound = new Audio(audio);
-    sound.play();
+function sound(audio) {
+    let $sound = new Audio(audio);
+    $sound.volume = 0.5;
+    $sound.play();
 }
 
 function size() {
