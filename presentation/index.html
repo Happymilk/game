@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="css/component.css" />
+		<link rel="stylesheet" href="css/theme/night.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+		<div id="large-header" class="large-header"></div>
+		<canvas id="demo-canvas"></canvas>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>ARKANOID</h1>
+					<p><small>Created by <a href="https://github.com/Happymilk">Andrey Dvorko / @Happymilk</a></small></p>
+				</section>
+				<section>
+					<section>
+						<h2>Arkanoid</h2>
+						<p>Arkanoid (アルカノイド Arukanoido) is an arcade game developed by Taito in 1986. It expanded upon Atari's Breakout games of the 1970s by adding power-ups, different types of bricks, a variety of level layouts, and visual layering and depth. The title refers to a doomed "mothership" from which the player's ship, the Vaus, escapes. Arkanoid revived the Breakout concept, resulting in many clones and similar games for home computers, even over a decade later.</p>
+					</section>
+					<section>
+						<img data-src="img/1.png">
+						<img data-src="img/1.jpg">
+						<img data-src="img/2.png">
+					</section>
+				</section>
+				<section>
+					<h2>Tasks</h2>
+					<ul>
+						<li>Initialize screen</li>
+						<li>Create ball, paddle, bricks</li>
+						<li>Motion, control and collision</li>
+					</ul>
+				</section>
+				<section>
+					<section>
+						<h2>Screen</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+let game_screen_width  = 1280;  
+let game_screen_height = 720; 
+
+function gameRun() {
+	canvas = document.getElementById("canvas");
+	context = canvas.getContext("2d");			
+	draw(); //select screen for represent
+	setLoop();
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Screen</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+function setLoop() {
+	let start = new Date().getTime(), time = 0;
+	function timer() {
+		time += 15;
+		let diff = (new Date().getTime() - start) - time;
+		gameClear();	
+		textFont('12pt Arial');
+		textColor('#000');
+		update();
+		draw();
+		window.setTimeout(timer, (15 - diff));
+	}	
+	window.setTimeout(timer, 15);
+}
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Objects</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+let ball = new Object();
+
+function initBall() {
+    ball.x = 0;			
+    ball.y = game_screen_height-40;
+    ball.dx = 0;
+    ball.dy = speed;  
+    ball.radius = 5;
+}
+
+function drawBall() {
+    circle(ball.x, ball.y, ball.radius, "#000");        
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Objects</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+let paddle = new Object();
+
+function initPaddle() {
+    paddle.width = 100;
+    paddle.height = 10;
+    paddle.x = game_screen_width / 2 - paddle.width;
+    paddle.y = game_screen_height - paddle.height;
+}
+
+function drawPaddle() {
+    rectangle(paddle.x,paddle.y,paddle.width,paddle.height,"#000");
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Objects</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+let bricks = new Object();
+
+function initBricks() {
+    bricks.cols = 15;
+    bricks.rows = 10;
+    bricks.width = 88.3;
+    bricks.height = 25;
+    bricks.padding = 3;	
+    bricks_count = level_bricks_count;
+}
+						</code></pre>
+					</section>
+					<section>
+						<h4>Objects</h4>
+						<pre><code class="hljs" data-trim contenteditable>
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,0],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,0],
+[0,1,2,2,1,1,2,2,1,1,2,2,1,0],
+[0,1,2,2,1,1,2,2,1,1,2,2,1,0],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,0],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,0]
+						</code></pre>
+						<pre><code class="hljs" data-trim contenteditable>
+function drawBricks() {	
+  for (let i = 0; i < bricks.rows; i++) 
+    for (let j = 0; j < bricks.cols; j++)
+      switch (level_bricks[i][j]) { 
+        case 1:
+          rectangle((j*(bricks.width+bricks.padding))+bricks.padding, 
+            (i*(bricks.height+bricks.padding))+bricks.padding,
+            bricks.width, bricks.height,"#000");
+          break;
+        //... 
+      }
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Objects</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+function updateBricks() {
+    if(lives <= 0) game_current_stage = score_stage;
+
+    if(bricks_count != 0) 
+        if(bricks_destroed == bricks_count)  {
+            bricks_destroed = 0; level++; speed += 2; 
+            game_start = false; initBall();
+        }	
+    level_bricks_count = all_bricks_count[level];
+    level_bricks = all_bricks[level];
+
+    if(level > 3) game_current_stage = score_stage;
+
+    initBricks();
+}
+						</code></pre>
+					</section>
+					<section>
+						<img data-src="img/2.jpg">
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Control</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+let mouseX = 0, mouseY = 0, mouseClickX = 0, mouseClickY = 0;
+let mouseClick = false;
+						</code></pre>
+						<pre><code class="hljs" data-trim contenteditable>
+function gameMouseMove(event) {
+    mouseX = (event.clientX - canvas.offsetLeft) / acceleration;
+    mouseY = (event.clientY - canvas.offsetTop) / acceleration;
+}
+						
+function gameMouseClick(event) {
+    mouseClickX = (event.clientX - canvas.offsetLeft) / acceleration;
+    mouseClickY = (event.clientY - canvas.offsetTop) / acceleration;
+}
+						</code></pre>
+						<pre><code class="hljs" data-trim contenteditable>
+function gameMouseDown(event) {
+	mouseClick = true;
+}
+
+function gameMouseUp(event) {
+	mouseClick = false;
+}	 
+						</code></pre>
+					</section>
+					<section>
+						<h2>Control</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+let KEY = 0;
+let KEY_SPACE = false;
+
+function gameKeyboardUpdateStates(event) {
+	switch (KEY = event.keyCode) {		
+        case 32: 
+            KEY_SPACE = true; 
+            break;
+    }	
+}
+
+function gameKeyboardClearStates(event) {
+	KEY = event.keyCode;
+	KEY_SPACE = false;		
+}
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Motion</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+function updatePaddle() {
+    paddle.x = mouseX - (paddle.width / 2);
+    
+    if(paddle.x < 0) 
+        paddle.x = 0; 
+    if(paddle.x + paddle.width > game_screen_width) 
+        paddle.x = canvas.width - paddle.width;   
+}
+						</code></pre>
+					</section>	
+					<section>
+						<h4>Motion</h4>
+						<pre><code class="hljs" data-trim contenteditable>
+function updateBall() {
+    if(ball.x + ball.dx + ball.radius > canvas.width 
+	|| ball.x + ball.dx - ball.radius < 0) 
+        ball.dx = -ball.dx;
+
+    rowheight = bricks.height + bricks.padding;
+    colwidth = bricks.width + bricks.padding;
+    row = Math.floor(ball.y/rowheight);
+    col = Math.floor(ball.x/colwidth);
+						</code></pre>
+						<pre><code class="hljs" data-trim contenteditable>
+    for(let i = 1; i <= 5; i++)
+        if (ball.y < bricks.rows * rowheight && row >= 0 && col >= 0 && level_bricks[row][col] == i) {
+            ball.dy = -ball.dy;
+            level_bricks[row][col] = i-1;
+            switch (i) {
+                case 1:
+                    score += 50;		
+                    bricks_destroed++; 
+                    break;
+                //...
+            }        
+        } //...
+						</code></pre>
+					</section>	
+					<section>
+						<h2>Motion</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+//...
+if(ball.y + ball.dy - ball.radius < 20)
+  ball.dy = -ball.dy;
+else if(ball.y + ball.dy + ball.radius > canvas.height - paddle.height) 
+  if(ball.x + ball.radius > paddle.x && ball.x - ball.radius < paddle.x + paddle.width) {
+    ball.dy = -ball.dy;
+    ball.dx = 8*((ball.x-(paddle.x+paddle.width/2)) / paddle.width);
+  } else if(ball.y + ball.dy + ball.radius > canvas.height) {
+    lives--; score -= 100; 
+    game_start = false; initBall();
+  }
+  </code></pre>
+  <pre><code class="hljs" data-trim contenteditable>
+  ball.x += ball.dx;
+  ball.y += ball.dy;    
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Motion</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+function sticky() {
+    ball.x = paddle.x + (paddle.width / 2); 
+    ball.y = paddle.y - paddle.height; 
+    size();
+}	
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>One nore problem</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+function size() {
+  tmp = document.getElementById("canvas");
+  if(document.documentElement.clientHeight < game_screen_height 
+  || document.documentElement.clientWidth > game_screen_width) {
+    tmp.style.height = document.documentElement.clientHeight + 'px';
+    tmp.style.width = "";
+    acceleration = document.documentElement.clientHeight / game_screen_height;
+	</code></pre>
+	<pre><code class="hljs" data-trim contenteditable>
+    if (document.documentElement.clientWidth > tmp.clientWidth) 
+      tmp.style.left = (document.documentElement.clientWidth - tmp.clientWidth) / 2 + 'px';
+  } else {
+    tmp.style.width = document.documentElement.clientWidth + 'px';
+    tmp.style.height = ""; tmp.style.left = "";
+    acceleration = document.documentElement.clientWidth / game_screen_width;
+  }
+}
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Result</h2>
+						<video controls>
+							<source src='img/1.webm' type='video/webm; codecs="vp8.0, vorbis"'/>
+							<source src='img/1.mp4' type='video/mp4; codecs="avc1.4D401E, mp4a.40.2"'/>
+							Fail
+						</video>
+					</section>
+					<section>
+						<h2>Result</h2>
+						<iframe src="../game.html" width="1200" height="500">
+							Frame with game
+						</iframe>
+					</section>
+				</section>
+				<section style="text-align: left;">
+					<h1>THE END ?</h1>
+					<p> <br> </p>
+				</section>
+			</div>	
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+		<script src="js/TweenLite.min.js"></script>
+		<script src="js/EasePack.min.js"></script>
+		<script src="js/rAF.js"></script>
+		<script src="js/demo-1.js"></script>
+
+		<script>
+
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+	
+	</body>
+</html>
